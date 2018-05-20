@@ -37,6 +37,7 @@ class MainWindow(QMainWindow):
         self.open_new_pnt_window = QAction('Open New Whiteboard', self)
         self.resume_whiteboarding = QAction('Resume Whiteboarding', self)
         self.open_help = QAction('Getting Started', self)
+        self.licence = QAction('LICENSE', self)
 
         self.setStyleSheet(
             'background-color:white;'
@@ -199,7 +200,9 @@ class MainWindow(QMainWindow):
         self.resume_whiteboarding.setEnabled(False)
 
         self.open_help.setShortcut('F1')
-        self.open_help.triggered.connect(lambda : self.view_help())
+        self.open_help.triggered.connect(lambda: self.view_help())
+        self.licence.setShortcut('F2')
+        self.licence.triggered.connect(lambda: self.view_help('LICENSE'))
 
         self.file.addAction(self.open_new_pnt_window)
         self.file.addAction(self.resume_whiteboarding)
@@ -208,6 +211,7 @@ class MainWindow(QMainWindow):
         self.file.addAction(self.exit)
 
         self.help.addAction(self.open_help)
+        self.help.addAction(self.licence)
 
         self.menubar.addMenu(self.file)
         self.menubar.addMenu(self.help)
@@ -268,8 +272,8 @@ class MainWindow(QMainWindow):
         self.w.show()
         self.resume_whiteboarding.setEnabled(True)
 
-    def view_help(self):
-        self.f1.process('getting_started.txt')
+    def view_help(self, file="getting_started.txt"):
+        self.f1.process(file)
         self.f1.show()
 
     def exit(self):

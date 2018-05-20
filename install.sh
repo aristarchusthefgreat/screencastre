@@ -19,28 +19,28 @@ if [ -d ${HERE}'/windows' ] && [ -d ${HERE}'/assets' ]
 else exit 1
 fi
 
-if [ ! -d ${INSTALL_DIR}'/screencaster' ]
-    then mkdir -v ${INSTALL_DIR}'/screencaster'
+if [ ! -d ${INSTALL_DIR}'/screencastre' ]
+    then mkdir -v ${INSTALL_DIR}'/screencastre'
 fi
 
-rsync -Pa ${HERE}'/assets' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/tmp' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/__main__.py' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/_constants.py' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/config.ini' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/getting_started.txt' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/README.txt' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/screencaster' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/settings.py' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/setup.py' ${INSTALL_DIR}'/screencaster/'
-rsync -Pa ${HERE}'/venv' ${INSTALL_DIR}'/screencaster/'
+rsync -Pa ${HERE}'/assets' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/tmp' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/__main__.py' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/_constants.py' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/config.ini' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/getting_started.txt' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/README.md' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/screencastre' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/settings.py' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/setup.py' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/venv' ${INSTALL_DIR}'/screencastre/'
 
-ln -s ${INSTALL_DIR}'/screencaster/screencaster' '/usr/bin/screencaster'
+ln -s ${INSTALL_DIR}'/screencastre/screencastre' '/usr/bin/screencastre'
 
 echo 'Installing custom python modules...'
 
 python3 ${HERE}'/'setup.py install
-python3 ${HERE}'/'init.py ${USER_HOME} ${INSTALL_DIR}'/screencaster'
+python3 ${HERE}'/'init.py ${USER_HOME} ${INSTALL_DIR}'/screencastre'
 
 echo "All Done."
 
