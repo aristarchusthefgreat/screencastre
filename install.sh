@@ -25,6 +25,7 @@ fi
 
 rsync -Pa ${HERE}'/assets' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/tmp' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/windows' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/__main__.py' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/_constants.py' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/config.ini' ${INSTALL_DIR}'/screencastre/'
@@ -34,6 +35,9 @@ rsync -Pa ${HERE}'/screencastre' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/settings.py' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/setup.py' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/venv' ${INSTALL_DIR}'/screencastre/'
+rsync -Pa ${HERE}'/splash.jpg' ${INSTALL_DIR}'/screencastre/'
+
+chmod 777 tmp
 
 ln -s ${INSTALL_DIR}'/screencastre/screencastre' '/usr/bin/screencastre'
 
