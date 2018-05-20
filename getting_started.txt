@@ -1,0 +1,11 @@
+This is a general purpose help file.
+
+|------------------------------------|
+|RECORDING
+|------------------------------------|
+
+1. Type the name of your file into the provided box, including a suitable x264 extention (*.avi, *.mp4, *.mkv, etc.)
+2. Press big red button.
+3. Press stop when you wish to finish recording.
+4. Press play button to review your file.
+
