@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
         self.resume_whiteboarding = QAction('Resume Whiteboarding', self)
         self.open_help = QAction('Getting Started', self)
         self.licence = QAction('LICENSE', self)
+        self.readme = QAction('README', self)
 
         self.setStyleSheet(
             'background-color:white;'
@@ -203,6 +204,8 @@ class MainWindow(QMainWindow):
         self.open_help.triggered.connect(lambda: self.view_help())
         self.licence.setShortcut('F2')
         self.licence.triggered.connect(lambda: self.view_help('LICENSE'))
+        self.readme.setShortcut('F3')
+        self.readme.triggered.connect(lambda: self.view_help('README.md'))
 
         self.file.addAction(self.open_new_pnt_window)
         self.file.addAction(self.resume_whiteboarding)
@@ -212,6 +215,7 @@ class MainWindow(QMainWindow):
 
         self.help.addAction(self.open_help)
         self.help.addAction(self.licence)
+        self.help.addAction(self.readme)
 
         self.menubar.addMenu(self.file)
         self.menubar.addMenu(self.help)
