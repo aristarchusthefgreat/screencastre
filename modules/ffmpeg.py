@@ -111,6 +111,7 @@ class AV_COMPILE(ffmpegVideo):
 
         try:
             os.environ["File"]
+            out = os.path.join(save_dir, os.environ['File'] + '.' + SETTINGS.settings_list['ext'])
         except KeyError:
             os.environ["File"] = "new_output" + '.' + SETTINGS.settings_list['ext']
         finally:
@@ -118,6 +119,9 @@ class AV_COMPILE(ffmpegVideo):
                 out = os.path.join(save_dir, os.environ['File'] + '.' + SETTINGS.settings_list['ext'])
             else:
                 out = os.path.join(save_dir, 'new_output' + '.' + SETTINGS.settings_list['ext'])
+
+
+        print(out)
 
         if os.path.isfile(out):
 
@@ -129,12 +133,15 @@ class AV_COMPILE(ffmpegVideo):
             else:
                 pass
         else:
-            self.ex = '%s -i %s -codec copy -y %s' % (FFMPEG_BIN, vd_in, out)
+            print("Execute")
+            self.ex = 'ffmpeg -i %s -codec copy -y %s' % (vd_in, out)
             sp.call(self.ex, shell=True, stderr=sp.PIPE)
 
         if ('question' in locals() and question.clickedButton() == question.yes) or ('question' not in locals()):
             os.remove(vd_in)
             if os.path.isfile(out):
                 os.environ['LastFile'] = out
+            else:
+                print("No file.")
         else:
             os.environ['LastFile'] = vd_in
