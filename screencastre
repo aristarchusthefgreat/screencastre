@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
 HERE="$(dirname "$(readlink -f "${0}")")"
-echo ${HERE}
 
 cd ${HERE} && ./__main__.py
