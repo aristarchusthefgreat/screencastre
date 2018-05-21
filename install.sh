@@ -15,7 +15,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 if [ -d ${HERE}'/windows' ] && [ -d ${HERE}'/assets' ]
-    then echo "Exists"
+    then echo "Checked directories exist... They do!"
 else exit 1
 fi
 
@@ -38,14 +38,17 @@ rsync -Pa ${HERE}'/setup.py' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/venv' ${INSTALL_DIR}'/screencastre/'
 rsync -Pa ${HERE}'/splash.jpg' ${INSTALL_DIR}'/screencastre/'
 
-chmod 777 ${INSTALL_DIR}'/'tmp
-
+echo "Creating symbolic link..."
 ln -s ${INSTALL_DIR}'/screencastre/screencastre' '/usr/bin/screencastre'
 
 echo 'Installing custom python modules...'
 
 python3 ${HERE}'/'setup.py install
 python3 ${HERE}'/'init.py ${USER_HOME} ${INSTALL_DIR}'/screencastre'
+
+echo "Changing permissions..."
+chmod 777 ${INSTALL_DIR}'/screencastre/'tmp
+chmod 777 ${INSTALL_DIR}'/screencastre/settings.xml'
 
 echo "All Done."
 
