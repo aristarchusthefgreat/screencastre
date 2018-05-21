@@ -120,9 +120,6 @@ class AV_COMPILE(ffmpegVideo):
             else:
                 out = os.path.join(save_dir, 'new_output' + '.' + SETTINGS.settings_list['ext'])
 
-
-        print(out)
-
         if os.path.isfile(out):
 
             question = dialog.QuestionDialog('This File exists. Are you sure you wish to overwrite it?')
@@ -133,7 +130,6 @@ class AV_COMPILE(ffmpegVideo):
             else:
                 pass
         else:
-            print("Execute")
             self.ex = 'ffmpeg -i %s -codec copy -y %s' % (vd_in, out)
             sp.call(self.ex, shell=True, stderr=sp.PIPE)
 
@@ -142,6 +138,6 @@ class AV_COMPILE(ffmpegVideo):
             if os.path.isfile(out):
                 os.environ['LastFile'] = out
             else:
-                print("No file.")
+                dialog.ErrorMsg("File Not Found. Failed to save.")
         else:
             os.environ['LastFile'] = vd_in

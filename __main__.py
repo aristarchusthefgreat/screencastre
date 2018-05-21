@@ -131,7 +131,7 @@ class MainWindow(QMainWindow):
 
         self.statusBar()
 
-        self.setWindowTitle("Screencaster 1.0")
+        self.setWindowTitle("Screencaster 0.1 BETA")
         self.center()
 
         line = QFrame()
