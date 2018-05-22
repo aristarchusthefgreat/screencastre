@@ -27,21 +27,25 @@ class Save:
     FILE = ""
     CONTENTS = dict()
 
-    def __init__(self, file, contents):
-        import struct
+    def __init__(self, file, obj, s=1):
 
         self.FILE = file
+        self.CONTENTS = obj
 
-        if not self.FILE.endswith('.scr'):
-            self.FILE += '.scr'
+        if s:
+            self.save()
 
-        self.CONTENTS = list(bytes(str(contents), 'utf-8'))
+    def save(self):
+        import pickle
 
-        if not self.CONTENTS == [91, 93]:
-            with open(self.FILE, "wb+") as f:
-                for char in self.CONTENTS:
-                    f.write(struct.pack('h', char))
-                f.close()
+        if self.CONTENTS:
+
+            if not self.FILE.endswith('.scr'):
+                self.FILE += '.scr'
+
+            with open(self.FILE, 'wb+') as f:
+                pickle.dump(self.CONTENTS, f, pickle.HIGHEST_PROTOCOL)
+
         else:
             dialog.ErrorMsg("There is no data to save!")
 
@@ -56,21 +60,11 @@ class Open:
         self.load_contents()
 
     def load_contents(self):
-        import ast, struct
+        import pickle
         if self.FILE.endswith('.scr'):
             with open(self.FILE, 'rb') as f:
-                self.Contents = f.read()
-                f.close()
-
-            fmt = '>'+str(len(self.Contents))+'c'
-
-            self.Contents = struct.unpack(fmt, self.Contents)
-            for char in self.Contents:
-                tmp = char.decode('utf-8')
-                if tmp != '\x00':
-                    self.byte_list.append(tmp)
-
-            self.Contents = ''.join(self.byte_list)
-            self.Contents = ast.literal_eval(self.Contents)
+                local_test = pickle.load(f)
+            self.Contents = local_test
         else:
             dialog.ErrorMsg('Unrecognised File Extension.')
+
