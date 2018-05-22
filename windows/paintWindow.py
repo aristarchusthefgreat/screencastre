@@ -10,6 +10,9 @@ from modules import dialog, common
 class NewScene(QOpenGLWidget):
 
     saved = False
+    tmp_lst = list()
+    redo_lst = list()
+    deleted_lines = list()
 
     def __init__(self):
         QWidget.__init__(self)
@@ -50,7 +53,12 @@ class NewScene(QOpenGLWidget):
         self.new = QShortcut(
             QKeySequence('Ctrl+Shift+N'), self
         )
+        self.redoDrawing = QShortcut(
+            QKeySequence('Ctrl+Y'), self
+        )
+        self.redoDrawing.activated.connect(self.redo)
         self.new.activated.connect(self.clearGraphic)
+
         self.initUI()
         self.initTools()
         self.center()
@@ -75,6 +83,7 @@ class NewScene(QOpenGLWidget):
         self.brush = QBrush(self.line_colour)
 
     def mouseDown(self, e):
+        #self.tmp_lst = list()
         if self.__undo_depth > -1:
             self.__undo_depth = -1
 
@@ -88,7 +97,8 @@ class NewScene(QOpenGLWidget):
             self.__menuOpen = True
         if not self.__menuOpen:
             self.lastPos = common.Point(e.scenePos().x(), e.scenePos().y())
-            self.scene.addLine(QLineF(QPoint(self.lastPos.X, self.lastPos.Y), QPoint(self.lastPos.X, self.lastPos.Y)), self.pen)
+            self.tmp_lst.append([])
+            self.tmp_lst[-1].append(self.scene.addLine(QLineF(QPoint(self.lastPos.X, self.lastPos.Y), QPoint(self.lastPos.X, self.lastPos.Y)), self.pen))
             self.lines.append({
                 'Line': {
                     'Points': {
@@ -111,7 +121,7 @@ class NewScene(QOpenGLWidget):
             if self.mouseLoc is not None:
                 self.lastPos = self.mouseLoc
             self.mouseLoc = common.Point(e.scenePos().x(), e.scenePos().y())
-            self.scene.addLine(QLineF(QPoint(self.lastPos.X, self.lastPos.Y), QPoint(self.mouseLoc.X, self.mouseLoc.Y)), self.pen)
+            self.tmp_lst[-1].append(self.scene.addLine(QLineF(QPoint(self.lastPos.X, self.lastPos.Y), QPoint(self.mouseLoc.X, self.mouseLoc.Y)), self.pen))
             self.lines.append({
                 'Line': {
                     'Points': {
@@ -251,6 +261,9 @@ class NewScene(QOpenGLWidget):
                             'Colour': line['Line']['Colour'],
                         }
                     })
+                    self.tmp_lst = list()
+                    self.deleted_lines = list()
+                    self.redo_lst = list()
             except:
                 e = traceback.format_exc()
                 dialog.ErrorMsg(e)
@@ -268,12 +281,6 @@ class NewScene(QOpenGLWidget):
             self.scene.clear()
             self.ellipses = list()
 
-    def undo(self):
-        if self.ellipses != []:
-            self.scene.removeItem(self.view.itemAt(self.ellipses[self.__undo_depth]['Ellipse']['Location'][0],
-                                                   self.ellipses[self.__undo_depth]['Ellipse']['Location'][1]))
-            self.ellipses.pop()
-
     def saveScreen(self):
 
         try:
@@ -285,6 +292,26 @@ class NewScene(QOpenGLWidget):
         except:
             e = traceback.format_exc()
             dialog.ErrorMsg(e)
+
+    def undo(self):
+        if self.tmp_lst:
+            self.redo_lst.append([])
+            for line in self.tmp_lst[-1]:
+                self.redo_lst[-1].append(line)
+                line.setVisible(False)
+                self.deleted_lines.append(self.lines[-1])
+                self.lines.pop()
+            self.tmp_lst.pop()
+
+    def redo(self):
+        if self.redo_lst:
+            self.tmp_lst.append([])
+            for line in self.redo_lst[-1]:
+                line.setVisible(True)
+                self.tmp_lst[-1].append(line)
+                self.lines.append(self.deleted_lines[-1])
+                del self.deleted_lines[-1]
+            del self.redo_lst[-1]
 
     def closeEvent(self, e):
         if not self.saved:
