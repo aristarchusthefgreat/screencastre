@@ -11,6 +11,9 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+
+        self.setWindowIcon(QIcon('assets/yiked8y5T.png'))
+
         self.drpdwn_driver = QComboBox(self)
         self.lbl_frmrt = QLabel(self)
         self.lbl_driver = QLabel(self)
