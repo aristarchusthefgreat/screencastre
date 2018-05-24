@@ -76,14 +76,13 @@ class NewScene(QOpenGLWidget):
         self.scene.mouseMoveEvent = self.mouseMove
         self.scene.contextMenuEvent = self.contextMenu
 
-    def initTools(self, colour=Qt.black, thickness=3):
+    def initTools(self, colour=Qt.black, thickness=6):
         self.line_colour = colour
         self.thickness = thickness
         self.pen = QPen(self.line_colour, self.thickness)
         self.brush = QBrush(self.line_colour)
 
     def mouseDown(self, e):
-        #self.tmp_lst = list()
         if self.__undo_depth > -1:
             self.__undo_depth = -1
 
@@ -144,12 +143,18 @@ class NewScene(QOpenGLWidget):
         red.triggered.connect(lambda: self.initTools(Qt.red, self.thickness))
         blue = QAction(QIcon(ASSETS_DIR + '/' + 'blue.png'), 'Blue', self)
         blue.triggered.connect(lambda: self.initTools(Qt.blue, self.thickness))
+        cyan = QAction(QIcon(ASSETS_DIR + '/' + 'cyan.png'), 'Cyan', self)
+        cyan.triggered.connect(lambda: self.initTools(Qt.cyan, self.thickness))
+        magenta = QAction(QIcon(ASSETS_DIR + '/' + 'magenta.png'), 'Magenta', self)
+        magenta.triggered.connect(lambda: self.initTools(Qt.magenta, self.thickness))
         gray = QAction(QIcon(ASSETS_DIR + '/' + 'gray.png'), 'Gray', self)
         gray.triggered.connect(lambda: self.initTools(Qt.gray, self.thickness))
         black = QAction(QIcon(ASSETS_DIR + '/' + 'black.png'), 'Black', self)
         black.triggered.connect(lambda: self.initTools(Qt.black, self.thickness))
         erase = QAction(QIcon(ASSETS_DIR + '/' + 'eraser.png'), 'Eraser', self)
-        erase.triggered.connect(lambda: self.initTools(Qt.white, self.thickness))
+        erase.triggered.connect(lambda: self.initTools(Qt.white, 50))
+        normal = QAction(QIcon(ASSETS_DIR + '/' + 'pen.png'), 'Normal', self)
+        normal.triggered.connect(lambda: self.initTools(Qt.black))
         new = QAction(QIcon(ASSETS_DIR + '/' + 'new.png'), 'New', self)
         new.triggered.connect(lambda: self.clearGraphic())
         save = QAction(QIcon(ASSETS_DIR + '/' + 'save.png'), 'Save', self)
@@ -159,15 +164,15 @@ class NewScene(QOpenGLWidget):
         default = QAction(QIcon(ASSETS_DIR + '/' + '6p-line.png'), 'default', self)
         default.triggered.connect(lambda: self.initTools(self.line_colour))
         thick_2 = QAction(QIcon(ASSETS_DIR + '/' + '2p-line.png'), '2px', self)
-        thick_2.triggered.connect(lambda: self.initTools(self.line_colour, 1))
+        thick_2.triggered.connect(lambda: self.initTools(self.line_colour, 2))
         thick_4 = QAction(QIcon(ASSETS_DIR + '/' + '4p-line.png'), '4px', self)
-        thick_4.triggered.connect(lambda: self.initTools(self.line_colour, 2))
+        thick_4.triggered.connect(lambda: self.initTools(self.line_colour, 4))
         thick_8 = QAction(QIcon(ASSETS_DIR + '/' + '6p-line.png'), '8px', self)
-        thick_8.triggered.connect(lambda: self.initTools(self.line_colour, 4))
+        thick_8.triggered.connect(lambda: self.initTools(self.line_colour, 8))
         thick_10 = QAction(QIcon(ASSETS_DIR + '/' + '10p-line.png'), '10px', self)
-        thick_10.triggered.connect(lambda: self.initTools(self.line_colour, 5))
+        thick_10.triggered.connect(lambda: self.initTools(self.line_colour, 10))
         thick_12 = QAction(QIcon(ASSETS_DIR + '/' + '12p-line.png'), '12px', self)
-        thick_12.triggered.connect(lambda: self.initTools(self.line_colour, 6))
+        thick_12.triggered.connect(lambda: self.initTools(self.line_colour, 12))
         self.menu.addSection('Options')
         self.menu.addAction(new)
         self.menu.addAction(load)
@@ -177,10 +182,13 @@ class NewScene(QOpenGLWidget):
         self.menu.addAction(green)
         self.menu.addAction(red)
         self.menu.addAction(blue)
+        self.menu.addAction(cyan)
+        self.menu.addAction(magenta)
         self.menu.addAction(gray)
         self.menu.addAction(black)
         self.menu.addSection('Pens')
         self.menu.addAction(erase)
+        self.menu.addAction(normal)
         self.menu.addSeparator()
         self.line_thickness.addAction(default)
         self.line_thickness.addSeparator()
@@ -214,7 +222,7 @@ class NewScene(QOpenGLWidget):
 
         openFile = dialog.OpenDialog()
 
-        if openFile.filenames != []:
+        if openFile.filenames:
             new_file = openFile.filenames[0]
         else:
             new_file = None
