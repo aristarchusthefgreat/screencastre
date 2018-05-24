@@ -1,12 +1,21 @@
-import gi, os
-
+import gi, os, vlc
+from modules import dialog
+from vlc import callbackmethod
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+
 gi.require_version('GdkX11', '3.0')
 
-import vlc
-from modules import dialog
 MRL = ""
+
+@callbackmethod
+def clip_finished(self, player):
+    print("Hello")
+    player.is_player_active = False
+    player.playback_button.set_image(player.play_image)
+    return
+
+
 
 class Player(Gtk.Window):
 
@@ -79,7 +88,7 @@ class Player(Gtk.Window):
         self.add(self.vbox)
         self.vbox.pack_start(self.draw_area, True, True, 0)
         self.vbox.pack_start(self.hbox, False, False, 0)
-        
+
     def stop_player(self, widget, data=None):
         if self.player_paused:
             self.player.stop()
@@ -87,6 +96,7 @@ class Player(Gtk.Window):
             self.player.stop()
             self.is_player_active = False
             self.playback_button.set_image(self.play_image)
+
         
     def toggle_player_playback(self, widget, data=None):
 
@@ -110,6 +120,8 @@ class Player(Gtk.Window):
     def _realized(self, widget, data=None):
         self.vlcInstance = vlc.Instance("--input-repeat=-1", "--fullscreen", "--no-xlib", "mouse-hide-timeout=5")
         self.player = self.vlcInstance.media_player_new()
+        self.player.event = self.player.event_manager()
+        self.player.event.event_attach(vlc.EventType.MediaPlayerEndReached, clip_finished, self)
         win_id = widget.get_window().get_xid()
         self.player.set_xwindow(win_id)
         self.player.set_mrl(MRL)
